@@ -3,11 +3,11 @@
   "theme": "maple",
   "name": "BloxGen API",
   "logo": {
-    "light": "https://bloxgen.net/logo",
-    "dark": "https://bloxgen.net/logo",
+    "light": "/logo.png",
+    "dark": "/logo.png",
     "href": "https://bloxgen.net"
   },
-  "favicon": "https://bloxgen.net/logo",
+  "favicon": "/logo.png",
   "colors": {
     "primary": "#E54D2E",
     "light": "#FF6B4A",
