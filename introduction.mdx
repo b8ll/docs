@@ -1,0 +1,61 @@
+---
+title: Introduction
+description: BloxGen Public API for programmatic account generation
+---
+
+The BloxGen Public API allows you to programmatically generate Roblox accounts using your API key. This API provides the same functionality as the web dashboard but designed for automation and integration.
+
+## Base URL
+
+```
+https://api.bloxgen.net
+```
+
+## Features
+
+<CardGroup cols={2}>
+  <Card title="Account Generation" icon="robot">
+    Generate various account types programmatically
+  </Card>
+  <Card title="Balance Management" icon="wallet">
+    Check your balance before generating
+  </Card>
+  <Card title="Role-Based Access" icon="shield">
+    Access different account types based on your subscription
+  </Card>
+  <Card title="Real-Time Pricing" icon="tag">
+    Get current prices for all account types
+  </Card>
+</CardGroup>
+
+## Account Types
+
+| Type | Description |
+|------|-------------|
+| `alt` | Fresh alternative accounts |
+| `+30 days old` | Accounts aged 30+ days |
+| `+1 year old` | Accounts aged 1+ year |
+| `5+ years old` | Accounts aged 5+ years |
+| `dump` | Verified dump accounts |
+| `dump (unchecked)` | Unchecked dump accounts |
+
+## Quick Example
+
+```bash
+curl -X POST https://api.bloxgen.net/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"apiKey": "BLOX-XXXXXXXXXXXXXXXX", "type": "alt"}'
+```
+
+```json
+{
+  "success": true,
+  "data": {
+    "username": "example_user",
+    "password": "secure_pass",
+    "cookie": ".ROBLOSECURITY=...",
+    "type": "alt",
+    "cost": 0.0004
+  }
+}
+```

@@ -1,0 +1,142 @@
+---
+title: Error Handling
+description: API error codes and how to handle them
+---
+
+## Error Response Format
+
+All error responses follow this structure:
+
+```json
+{
+  "success": false,
+  "message": "Error description",
+  "timeRemaining": 25000
+}
+```
+
+The `timeRemaining` field only appears for cooldown-related errors (HTTP 429).
+
+## HTTP Status Codes
+
+| Code | Meaning | Action |
+|------|---------|--------|
+| 400 | Bad Request | Check request body/parameters |
+| 401 | Unauthorized | Verify API key |
+| 403 | Forbidden | Check account status or role access |
+| 404 | Not Found | Account type out of stock |
+| 429 | Too Many Requests | Wait for cooldown or daily reset |
+| 500 | Internal Server Error | Retry later, contact support if persistent |
+| 503 | Service Unavailable | Database connection issue, retry later |
+
+## Common Errors
+
+### Authentication Errors (401)
+
+```json
+{"success": false, "message": "API key is required"}
+{"success": false, "message": "Invalid API key format"}
+{"success": false, "message": "Invalid API key"}
+```
+
+### Access Errors (403)
+
+```json
+{"success": false, "message": "Account not verified"}
+{"success": false, "message": "Account banned"}
+{"success": false, "message": "No access to this account type"}
+```
+
+### Validation Errors (400)
+
+```json
+{"success": false, "message": "Account type is required"}
+{"success": false, "message": "Invalid account type"}
+{"success": false, "message": "Insufficient balance"}
+```
+
+### Rate Limit Errors (429)
+
+```json
+{"success": false, "message": "Cooldown active", "timeRemaining": 25000}
+{"success": false, "message": "Daily limit exceeded (100 accounts)"}
+```
+
+### Stock Errors (404)
+
+```json
+{"success": false, "message": "No accounts available"}
+```
+
+## Best Practices
+
+### Implement Retry Logic
+
+```python
+import time
+import requests
+
+def generate_account(api_key: str, account_type: str, max_retries: int = 3):
+    for attempt in range(max_retries):
+        response = requests.post(
+            "https://api.bloxgen.net/api/generate",
+            json={"apiKey": api_key, "type": account_type}
+        )
+        
+        if response.status_code == 200:
+            return response.json()
+        
+        if response.status_code == 429:
+            data = response.json()
+            wait_time = data.get("timeRemaining", 5000) / 1000
+            time.sleep(wait_time)
+            continue
+        
+        if response.status_code >= 500:
+            time.sleep(2 ** attempt)
+            continue
+        
+        return response.json()
+    
+    return {"success": False, "message": "Max retries exceeded"}
+```
+
+### Check Balance Before Generating
+
+```javascript
+async function safeGenerate(apiKey, type, prices) {
+  const balanceRes = await fetch(`/api/balance?apiKey=${apiKey}`);
+  const { balance } = await balanceRes.json();
+  
+  if (balance < prices[type]) {
+    return { success: false, message: "Insufficient balance" };
+  }
+  
+  return fetch("/api/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ apiKey, type })
+  }).then(r => r.json());
+}
+```
+
+### Handle All Error Cases
+
+```go
+switch resp.StatusCode {
+case 200:
+    // Success
+case 400:
+    // Invalid request - check parameters
+case 401:
+    // Auth failed - check API key
+case 403:
+    // Access denied - check role/account status
+case 404:
+    // Out of stock - try different type or wait
+case 429:
+    // Rate limited - wait and retry
+case 500, 503:
+    // Server error - retry with backoff
+}
+```

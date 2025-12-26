@@ -1,0 +1,58 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "BloxGen API",
+  "logo": {
+    "light": "https://bloxgen.net/logo",
+    "dark": "https://bloxgen.net/logo",
+    "href": "https://bloxgen.net"
+  },
+  "favicon": "https://bloxgen.net/logo",
+  "colors": {
+    "primary": "#E54D2E",
+    "light": "#FF6B4A",
+    "dark": "#C4391A",
+    "background": {
+      "light": "#FFFFFF",
+      "dark": "#0F0F0F"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Dashboard",
+      "url": "https://bloxgen.net/dashboard"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get Started",
+    "url": "https://bloxgen.net/register"
+  },
+  "anchors": [
+    {
+      "name": "API Reference",
+      "icon": "code",
+      "url": "api-reference"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": ["introduction", "authentication", "quickstart"]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/generate",
+        "api-reference/balance",
+        "api-reference/prices",
+        "api-reference/health"
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": ["guides/roles", "guides/cooldowns", "guides/errors"]
+    }
+  ],
+  "footerSocials": {
+    "website": "https://bloxgen.net"
+  }
+}

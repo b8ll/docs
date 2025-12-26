@@ -1,0 +1,84 @@
+---
+title: Get Prices
+api: GET /api/prices
+description: Get current pricing for all account types
+---
+
+## Request
+
+<ParamField query="apiKey" type="string" required>
+  Your API key in format `BLOX-[A-Z0-9]{16}`
+</ParamField>
+
+## Response
+
+<ResponseField name="success" type="boolean">
+  Whether the request was successful
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Pricing map (only present on success)
+  <Expandable title="properties">
+    <ResponseField name="alt" type="number">
+      Price for alt accounts
+    </ResponseField>
+    <ResponseField name="+30 days old" type="number">
+      Price for 30+ day old accounts
+    </ResponseField>
+    <ResponseField name="+1 year old" type="number">
+      Price for 1+ year old accounts
+    </ResponseField>
+    <ResponseField name="5+ years old" type="number">
+      Price for 5+ year old accounts
+    </ResponseField>
+    <ResponseField name="dump" type="number">
+      Price for verified dump accounts
+    </ResponseField>
+    <ResponseField name="dump (unchecked)" type="number">
+      Price for unchecked dump accounts
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Error message (only present on failure)
+</ResponseField>
+
+## Pricing
+
+| Account Type | Standard Price | Resell Price |
+|--------------|----------------|--------------|
+| alt | $0.0004 | $0.0013 |
+| +30 days old | $0.0006 | - |
+| +1 year old | $0.0008 | - |
+| 5+ years old | $0.0012 | - |
+| dump | $0.005 | - |
+| dump (unchecked) | $0.003 | - |
+
+<Note>
+Resell users have special pricing for alt accounts only.
+</Note>
+
+## Example
+
+<RequestExample>
+```bash cURL
+curl "https://api.bloxgen.net/api/prices?apiKey=BLOX-XXXXXXXXXXXXXXXX"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Success
+{
+  "success": true,
+  "data": {
+    "alt": 0.0004,
+    "+30 days old": 0.0006,
+    "+1 year old": 0.0008,
+    "5+ years old": 0.0012,
+    "dump": 0.005,
+    "dump (unchecked)": 0.003
+  }
+}
+```
+</ResponseExample>

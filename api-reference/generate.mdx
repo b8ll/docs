@@ -1,0 +1,115 @@
+---
+title: Generate Account
+api: POST /api/generate
+description: Generate a new account of the specified type
+---
+
+## Request
+
+<ParamField body="apiKey" type="string" required>
+  Your API key in format `BLOX-[A-Z0-9]{16}`
+</ParamField>
+
+<ParamField body="type" type="string" required>
+  Account type to generate. One of:
+  - `alt`
+  - `+30 days old`
+  - `+1 year old`
+  - `5+ years old`
+  - `dump`
+  - `dump (unchecked)`
+</ParamField>
+
+## Response
+
+<ResponseField name="success" type="boolean">
+  Whether the request was successful
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Account data (only present on success)
+  <Expandable title="properties">
+    <ResponseField name="username" type="string">
+      Account username
+    </ResponseField>
+    <ResponseField name="password" type="string">
+      Account password
+    </ResponseField>
+    <ResponseField name="cookie" type="string">
+      .ROBLOSECURITY cookie for authentication
+    </ResponseField>
+    <ResponseField name="type" type="string">
+      Account type that was generated
+    </ResponseField>
+    <ResponseField name="cost" type="number">
+      Amount deducted from balance
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Error message (only present on failure)
+</ResponseField>
+
+<ResponseField name="timeRemaining" type="number">
+  Milliseconds until cooldown expires (only on 429 errors)
+</ResponseField>
+
+## Example
+
+<RequestExample>
+```bash cURL
+curl -X POST https://api.bloxgen.net/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"apiKey": "BLOX-XXXXXXXXXXXXXXXX", "type": "alt"}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Success
+{
+  "success": true,
+  "data": {
+    "username": "cool_player_123",
+    "password": "SecurePass456",
+    "cookie": ".ROBLOSECURITY=_|WARNING:-DO-NOT-SHARE...",
+    "type": "alt",
+    "cost": 0.0004
+  }
+}
+```
+
+```json Insufficient Balance
+{
+  "success": false,
+  "message": "Insufficient balance"
+}
+```
+
+```json Cooldown Active
+{
+  "success": false,
+  "message": "Cooldown active",
+  "timeRemaining": 25000
+}
+```
+
+```json Out of Stock
+{
+  "success": false,
+  "message": "No accounts available"
+}
+```
+</ResponseExample>
+
+## Error Codes
+
+| Code | Message | Description |
+|------|---------|-------------|
+| 400 | Invalid account type | Type not recognized |
+| 400 | Insufficient balance | Not enough balance |
+| 401 | Invalid API key | Authentication failed |
+| 403 | No access to this account type | Role doesn't permit this type |
+| 404 | No accounts available | Stock depleted |
+| 429 | Cooldown active | Must wait before generating again |
+| 429 | Daily limit exceeded | 100 accounts/day limit reached |

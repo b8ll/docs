@@ -1,0 +1,55 @@
+---
+title: Authentication
+description: How to authenticate with the BloxGen API
+---
+
+All API requests require authentication using your API key.
+
+## API Key Format
+
+API keys follow the format:
+
+```
+BLOX-XXXXXXXXXXXXXXXX
+```
+
+Where `X` is an uppercase letter (A-Z) or digit (0-9). The key is exactly 21 characters long.
+
+## Getting Your API Key
+
+1. Log in to your [BloxGen Dashboard](https://bloxgen.net/dashboard)
+2. Navigate to **Settings** → **API**
+3. Click **Generate API Key** or copy your existing key
+
+<Warning>
+Keep your API key secret. Anyone with your key can generate accounts and spend your balance.
+</Warning>
+
+## Using Your API Key
+
+Include your API key in the request body:
+
+```json
+{
+  "apiKey": "BLOX-XXXXXXXXXXXXXXXX",
+  "type": "alt"
+}
+```
+
+## Requirements
+
+Your account must meet these requirements to use the API:
+
+- Email verified
+- Account not banned or suspended
+- Sufficient balance for the requested account type
+
+## Error Responses
+
+| Code | Message | Description |
+|------|---------|-------------|
+| 401 | API key is required | No API key provided |
+| 401 | Invalid API key format | Key doesn't match `BLOX-[A-Z0-9]{16}` |
+| 401 | Invalid API key | Key not found in database |
+| 403 | Account not verified | Email verification required |
+| 403 | Account banned | Account has been suspended |

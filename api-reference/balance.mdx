@@ -1,0 +1,57 @@
+---
+title: Get Balance
+api: GET /api/balance
+description: Check your current account balance
+---
+
+## Request
+
+<ParamField query="apiKey" type="string" required>
+  Your API key in format `BLOX-[A-Z0-9]{16}`
+</ParamField>
+
+## Response
+
+<ResponseField name="success" type="boolean">
+  Whether the request was successful
+</ResponseField>
+
+<ResponseField name="balance" type="number">
+  Current balance in USD (only present on success)
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Error message (only present on failure)
+</ResponseField>
+
+## Example
+
+<RequestExample>
+```bash cURL
+curl "https://api.bloxgen.net/api/balance?apiKey=BLOX-XXXXXXXXXXXXXXXX"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Success
+{
+  "success": true,
+  "balance": 25.75
+}
+```
+
+```json Invalid API Key
+{
+  "success": false,
+  "message": "Invalid API key"
+}
+```
+</ResponseExample>
+
+## Error Codes
+
+| Code | Message | Description |
+|------|---------|-------------|
+| 401 | API key is required | No API key provided |
+| 401 | Invalid API key format | Key doesn't match expected format |
+| 401 | Invalid API key | Key not found in database |

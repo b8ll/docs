@@ -1,0 +1,56 @@
+---
+title: Health Check
+api: GET /health
+description: Check API server status and database connections
+---
+
+## Request
+
+No authentication required.
+
+## Response
+
+<ResponseField name="status" type="string">
+  Overall server status: `healthy` or `unhealthy`
+</ResponseField>
+
+<ResponseField name="mongodb" type="string">
+  MongoDB connection status: `connected` or `disconnected`
+</ResponseField>
+
+<ResponseField name="redis" type="string">
+  Redis connection status: `connected` or `disconnected`
+</ResponseField>
+
+## Example
+
+<RequestExample>
+```bash cURL
+curl "https://api.bloxgen.net/health"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Healthy
+{
+  "status": "healthy",
+  "mongodb": "connected",
+  "redis": "connected"
+}
+```
+
+```json Unhealthy
+{
+  "status": "unhealthy",
+  "mongodb": "connected",
+  "redis": "disconnected"
+}
+```
+</ResponseExample>
+
+## Status Codes
+
+| Code | Status | Description |
+|------|--------|-------------|
+| 200 | healthy | All systems operational |
+| 503 | unhealthy | One or more database connections failed |

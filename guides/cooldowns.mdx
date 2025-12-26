@@ -1,0 +1,102 @@
+---
+title: Cooldowns & Limits
+description: Understanding rate limits and cooldown periods
+---
+
+## Cooldown System
+
+After generating an account, you must wait before generating another account of the same type. Cooldowns are per-account-type, so you can generate different types simultaneously.
+
+## Cooldown Durations
+
+### Ultra Tier
+
+| Account Type | Cooldown |
+|--------------|----------|
+| alt | 10 seconds |
+| +30 days old | 30 seconds |
+| +1 year old | 2 minutes |
+| 5+ years old | 5 minutes |
+| dump | 10 minutes |
+| dump (unchecked) | 10 seconds |
+
+### Premium Tier
+
+| Account Type | Cooldown |
+|--------------|----------|
+| alt | 30 seconds |
+| +30 days old | 1 minute |
+| +1 year old | 5 minutes |
+| 5+ years old | 10 minutes |
+| dump | 30 minutes |
+| dump (unchecked) | 30 seconds |
+
+### Free Tier
+
+| Account Type | Cooldown |
+|--------------|----------|
+| alt | 2 hours |
+| +30 days old | 6 hours |
+| +1 year old | 12 hours |
+| 5+ years old | 24 hours |
+| dump | 48 hours |
+| dump (unchecked) | 24 hours |
+
+### Resell
+
+No cooldowns apply.
+
+## Daily Limits
+
+| Role | Daily Limit |
+|------|-------------|
+| Free | 100 accounts |
+| Premium | 100 accounts |
+| Ultra | 100 accounts |
+| Resell | Unlimited |
+
+Daily limits reset at midnight UTC.
+
+## Handling Cooldowns
+
+When a cooldown is active, the API returns HTTP 429 with the remaining time:
+
+```json
+{
+  "success": false,
+  "message": "Cooldown active",
+  "timeRemaining": 25000
+}
+```
+
+The `timeRemaining` field is in milliseconds. Use this to implement retry logic:
+
+```javascript
+async function generateWithRetry(apiKey, type) {
+  const response = await fetch("/api/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ apiKey, type })
+  });
+  
+  const data = await response.json();
+  
+  if (response.status === 429 && data.timeRemaining) {
+    await new Promise(r => setTimeout(r, data.timeRemaining));
+    return generateWithRetry(apiKey, type);
+  }
+  
+  return data;
+}
+```
+
+## Daily Limit Response
+
+When the daily limit is exceeded:
+
+```json
+{
+  "success": false,
+  "message": "Daily limit exceeded (100 accounts)"
+}
+```

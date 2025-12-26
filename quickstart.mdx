@@ -1,0 +1,137 @@
+---
+title: Quickstart
+description: Generate your first account in minutes
+---
+
+## Prerequisites
+
+- A BloxGen account with verified email
+- Sufficient balance
+- Your API key
+
+## Step 1: Get Your API Key
+
+Navigate to your [dashboard settings](https://bloxgen.net/dashboard/settings) and copy your API key.
+
+## Step 2: Check Your Balance
+
+```bash
+curl "https://api.bloxgen.net/api/balance?apiKey=BLOX-XXXXXXXXXXXXXXXX"
+```
+
+```json
+{
+  "success": true,
+  "balance": 10.50
+}
+```
+
+## Step 3: Check Prices
+
+```bash
+curl "https://api.bloxgen.net/api/prices?apiKey=BLOX-XXXXXXXXXXXXXXXX"
+```
+
+```json
+{
+  "success": true,
+  "data": {
+    "alt": 0.0004,
+    "+30 days old": 0.0006,
+    "+1 year old": 0.0008,
+    "5+ years old": 0.0012,
+    "dump": 0.005,
+    "dump (unchecked)": 0.003
+  }
+}
+```
+
+## Step 4: Generate an Account
+
+```bash
+curl -X POST https://api.bloxgen.net/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"apiKey": "BLOX-XXXXXXXXXXXXXXXX", "type": "alt"}'
+```
+
+```json
+{
+  "success": true,
+  "data": {
+    "username": "generated_user",
+    "password": "secure_password",
+    "cookie": ".ROBLOSECURITY=_|WARNING...",
+    "type": "alt",
+    "cost": 0.0004
+  }
+}
+```
+
+## Code Examples
+
+<CodeGroup>
+
+```python Python
+import requests
+
+API_KEY = "BLOX-XXXXXXXXXXXXXXXX"
+BASE_URL = "https://api.bloxgen.net"
+
+response = requests.post(
+    f"{BASE_URL}/api/generate",
+    json={"apiKey": API_KEY, "type": "alt"}
+)
+
+data = response.json()
+if data["success"]:
+    account = data["data"]
+    print(f"Username: {account['username']}")
+    print(f"Password: {account['password']}")
+```
+
+```javascript JavaScript
+const API_KEY = "BLOX-XXXXXXXXXXXXXXXX";
+const BASE_URL = "https://api.bloxgen.net";
+
+const response = await fetch(`${BASE_URL}/api/generate`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ apiKey: API_KEY, type: "alt" })
+});
+
+const data = await response.json();
+if (data.success) {
+  console.log(`Username: ${data.data.username}`);
+  console.log(`Password: ${data.data.password}`);
+}
+```
+
+```go Go
+package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "net/http"
+)
+
+func main() {
+    payload := map[string]string{
+        "apiKey": "BLOX-XXXXXXXXXXXXXXXX",
+        "type":   "alt",
+    }
+    body, _ := json.Marshal(payload)
+    
+    resp, _ := http.Post(
+        "https://api.bloxgen.net/api/generate",
+        "application/json",
+        bytes.NewBuffer(body),
+    )
+    defer resp.Body.Close()
+    
+    var result map[string]interface{}
+    json.NewDecoder(resp.Body).Decode(&result)
+}
+```
+
+</CodeGroup>
