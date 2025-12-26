@@ -11,11 +11,7 @@
   "colors": {
     "primary": "#E54D2E",
     "light": "#FF6B4A",
-    "dark": "#C4391A",
-    "background": {
-      "light": "#FFFFFF",
-      "dark": "#0F0F0F"
-    }
+    "dark": "#C4391A"
   },
   "topbarLinks": [
     {
@@ -34,25 +30,37 @@
       "url": "api-reference"
     }
   ],
-  "navigation": [
-    {
-      "group": "Getting Started",
-      "pages": ["introduction", "authentication", "quickstart"]
-    },
-    {
-      "group": "API Reference",
-      "pages": [
-        "api-reference/generate",
-        "api-reference/balance",
-        "api-reference/prices",
-        "api-reference/health"
-      ]
-    },
-    {
-      "group": "Guides",
-      "pages": ["guides/roles", "guides/cooldowns", "guides/errors"]
-    }
-  ],
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": ["introduction", "authentication", "quickstart"]
+          },
+          {
+            "group": "Guides",
+            "pages": ["guides/roles", "guides/cooldowns", "guides/errors"]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Endpoints",
+            "pages": [
+              "api-reference/generate",
+              "api-reference/balance",
+              "api-reference/prices",
+              "api-reference/health"
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "footerSocials": {
     "website": "https://bloxgen.net"
   }
